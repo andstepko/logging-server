@@ -28,5 +28,11 @@ func main() {
         http.HandleFunc(url, handler)
     }
 
-    http.ListenAndServeTLS(fmt.Sprintf("%s:%d", ADDRESS, PORT), CERTIFICATE_PATH, KEY_PATH, nil)
+    err := http.ListenAndServeTLS(fmt.Sprintf("%s:%d", ADDRESS, PORT), CERTIFICATE_PATH, KEY_PATH, nil)
+    if err != nil && !MUST_SSL {
+        // Try to run without SSL
+        err = http.ListenAndServe(fmt.Sprintf("%s:%d", ADDRESS, PORT), nil)
+    }
+
+    fmt.Printf("Error running server==>%s\n", err)
 }
