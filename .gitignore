@@ -1,0 +1,4 @@
+*.pem
+*.log
+logging_server
+local_config.go
