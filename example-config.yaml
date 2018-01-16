@@ -1,0 +1,5 @@
+address: localhost
+port: 9000
+ssl_only: false
+certificate_path: fullchain.pem
+key_path: key.pem

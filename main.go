@@ -5,6 +5,9 @@ import (
     "net/http"
     "strings"
     "io/ioutil"
+	"time"
+	"gitlab.com/distributed_lab/logan/v3"
+	"net"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -20,19 +23,32 @@ func handler(w http.ResponseWriter, r *http.Request) {
     fmt.Println("\nBODY:")
     fmt.Println(string(body) + "\n\n")
 
-    w.WriteHeader(200)
+    w.WriteHeader(http.StatusOK)
 }
 
 func main() {
-    for _, url := range urls {
-        http.HandleFunc(url, handler)
+	log := logan.New()
+
+	// TODO Read file name from args
+	config, err := ReadConfig("config")
+	if err != nil {
+		panic(err)
+	}
+
+	ln, err := net.Listen("tcp", fmt.Sprintf("%s:%d", config.Address, config.Port))
+	if err != nil {
+		panic(err)
+	}
+
+	err = http.ServeTLS(ln, http.HandlerFunc(handler), config.CertificatePath, config.KeyPath)
+    if err != nil && !config.SSLOnly {
+    	log.WithError(err).Warn("Failed to run server with SSL.")
+
+        time.Sleep(1 * time.Second)
+
+        log.Info("Trying to run server without SSL.")
+        err = http.Serve(ln, http.HandlerFunc(handler))
     }
 
-    err := http.ListenAndServeTLS(fmt.Sprintf("%s:%d", ADDRESS, PORT), CERTIFICATE_PATH, KEY_PATH, nil)
-    if err != nil && !MUST_SSL {
-        // Try to run without SSL
-        err = http.ListenAndServe(fmt.Sprintf("%s:%d", ADDRESS, PORT), nil)
-    }
-
-    fmt.Printf("Error running server==>%s\n", err)
+    log.WithError(err).Error("Error running server.")
 }
