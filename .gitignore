@@ -4,3 +4,6 @@ logging_server
 local_config.go
 .idea/
 config.yaml
+requests/
+POST*
+GET*

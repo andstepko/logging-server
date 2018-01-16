@@ -3,28 +3,10 @@ package main
 import (
     "fmt"
     "net/http"
-    "strings"
-    "io/ioutil"
 	"time"
 	"gitlab.com/distributed_lab/logan/v3"
 	"net"
 )
-
-func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Println("HEADERS:")
-    for name, headers := range r.Header {
-        name = strings.ToLower(name)
-       for _, h := range headers {
-            fmt.Printf("%v: %v\n", name, h)
-       }
-     }
-
-    body, _ := ioutil.ReadAll(r.Body)
-    fmt.Println("\nBODY:")
-    fmt.Println(string(body) + "\n\n")
-
-    w.WriteHeader(http.StatusOK)
-}
 
 func main() {
 	log := logan.New()
