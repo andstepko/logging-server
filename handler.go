@@ -44,8 +44,11 @@ func buildRequestPrint(r *http.Request) string {
 	return result
 }
 
+// TODO Custom format
 func saveRequest(method, text string) error {
-	fileName := fmt.Sprintf("./%s %s", method, time.Now().Format("Mon, 02 Jan 2006 15:04:05.000 -0700"))
+	// TODO Custom format
+	timeFormat := "Mon, 02 Jan 2006 15:04:05.000 -0700"
+	fileName := fmt.Sprintf("./%s %s", method, time.Now().Format(timeFormat))
 
 	err := ioutil.WriteFile(fileName, []byte(text), 0644)
 	if err != nil {
