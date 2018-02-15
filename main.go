@@ -6,13 +6,25 @@ import (
 	"time"
 	"gitlab.com/distributed_lab/logan/v3"
 	"net"
+	"os"
 )
 
 func main() {
 	log := logan.New()
 
-	// TODO Read file name from args
-	config, err := ReadConfig("config")
+	args := os.Args[1:]
+
+	var configFileName string
+	if len(args) < 1 {
+		configFileName = "config"
+	} else {
+		configFileName = args[0]
+		if len(configFileName) > 5 && configFileName[len(configFileName) - 5:] == ".yaml" {
+			configFileName = configFileName[:len(configFileName) - 5]
+		}
+	}
+
+	config, err := ReadConfig(configFileName)
 	if err != nil {
 		panic(err)
 	}
