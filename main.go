@@ -29,10 +29,14 @@ func main() {
 		panic(err)
 	}
 
+	log.WithField("config_name", configFileName).Info("Read config successfully.")
+
 	ln, err := net.Listen("tcp", fmt.Sprintf("%s:%d", config.Address, config.Port))
 	if err != nil {
 		panic(err)
 	}
+
+	log.Infof("Starting server on %s:%d.", config.Address, config.Port)
 
 	err = http.ServeTLS(ln, http.HandlerFunc(handler), config.CertificatePath, config.KeyPath)
     if err != nil && !config.SSLOnly {
