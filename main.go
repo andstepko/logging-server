@@ -44,7 +44,7 @@ func main() {
 
         time.Sleep(1 * time.Second)
 
-        log.Info("Trying to run server without SSL.")
+        log.Info("Starting server without SSL.")
         err = http.Serve(ln, http.HandlerFunc(handler))
     }
 

@@ -28,7 +28,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func buildRequestPrint(r *http.Request) string {
-	result := r.Method + "\n\n"
+	var url string
+	if r.URL != nil {
+		url = r.URL.String()
+	}
+
+	result := fmt.Sprintf("%s %s\n\n", r.Method, url)
 
 	for name, headers := range r.Header {
 		name = strings.ToLower(name)
